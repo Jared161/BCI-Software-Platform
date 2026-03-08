@@ -1,1 +1,3 @@
-
+pipeline 暂时只能用：
+BCIDataSystem.query_data()
+BCIDataSystem.load_feature()

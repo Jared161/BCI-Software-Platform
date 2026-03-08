@@ -37,4 +37,7 @@ class AlgorithmRegistry:
                         importlib.import_module(f".{mod_pkg}", package)
                     except Exception as e:
                         print(f"加载算法失败：{mod_pkg}，错误：{e}")
-    
+
+    @classmethod
+    def list_algorithms(cls):
+        return list(cls._algorithms.keys())

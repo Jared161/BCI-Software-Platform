@@ -1,0 +1,10 @@
+数据模块接口
+
+查询数据
+BCIDataSystem.query_data()
+
+加载数据
+BCIDataSystem.load_feature(data_id)
+
+返回
+X,y,meta

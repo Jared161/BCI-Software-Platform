@@ -3,25 +3,32 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from src.algorithms.registry import AlgorithmRegistry
+from src import BCIDataSystem
 
 def main():
     parser = argparse.ArgumentParser(description="算法插件化运行框架")
     parser.add_argument("--algo", required=True, help="要运行的算法名称")
-    parser.add_argument("--data", required=True, help="CSV数据集路径")
-    parser.add_argument("--target", default="target", help="标签列名")
+    parser.add_argument("--data_id", required=True, help="数据ID(inquiry from BCIDataSystem")
+    parser.add_argument("--data_dir", default="./third_party_device_data", help="数据目录")
     args = parser.parse_args()
 
     # ====================== 自动发现所有算法 ======================
     AlgorithmRegistry.discover()
 
+    # ====================== 初始化数据系统 ======================
+    bci = BCIDataSystem(data_dir=args.data_dir)
+
+    print("\n可用数据ID：", bci.query_data())
+
+    # ====================== 加载数据 ======================
+    X, y, meta = bci.load_feature(args.data_id)
+
+    print("\n加载数据：", args.data_id)
+    print("数据形状：", X.shape)
+
     # ====================== 自动实例化算法 ======================
     algo_class = AlgorithmRegistry.get(args.algo)
     algo = algo_class()
-
-    # ====================== 自动加载你的CSV数据 ======================
-    df = pd.read_csv(args.data)
-    X = df.drop(args.target, axis=1).values
-    y = df[args.target].values
 
     # ====================== 自动划分训练/测试集 ======================
     X_train, X_test, y_train, y_test = train_test_split(
