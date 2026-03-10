@@ -2,8 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import Dict, Any, Optional
 from sklearn.metrics import (
-    accuracy_score, precision_score, recall_score, f1_score,
-    roc_auc_score, confusion_matrix
+    accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 )
 from ..base import BaseAlgorithm
 from ..__init__ import register_algorithm

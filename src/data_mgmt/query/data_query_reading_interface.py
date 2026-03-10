@@ -12,7 +12,7 @@ DEFAULT_DATA_DIR = "./third_party_device_data"
 SUPPORT_FORMATS = ["EDF", "CSV"]
 DEFAULT_SAMPLE_RATE = 250
 EVENT_MAP = {"left_hand": 1, "right_hand": 2, "rest": 0, "eye_blink": 3}
-LABEL_COLUMNS = ["label", "task", "event", "annotation"]
+LABEL_COLUMNS = ["label", "task", "event", "annotation", "target"]
 
 # ===================== 工具函数 =====================
 def init_data_dir(data_dir: str):
@@ -136,7 +136,7 @@ class BCIDataSystem:
     def _read_csv(self, file_path: str, data_id: str) -> Dict:
         try:
             df = pd.read_csv(file_path)
-            channel_cols = [col for col in df.columns if any(key in col.lower() for key in ["eeg", "ch"])]
+            channel_cols = [col for col in df.columns if any(key in col.lower() for key in ["eeg", "ch","f"])]
             if not channel_cols:
                 raise ValueError("未找到EEG通道列（列名建议包含EEG/Ch）")
             X = df[channel_cols].values
