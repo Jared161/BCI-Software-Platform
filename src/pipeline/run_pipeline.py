@@ -5,8 +5,9 @@ from src import AlgorithmRegistry
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
-from src.preprocessing import Preprocessing
 
+from src.preprocessing import Preprocessing
+from src.feature_extraction import FeatureExtractor
 
 def run_pipeline(algo_name="svm"):
     """
@@ -50,6 +51,13 @@ def run_pipeline(algo_name="svm"):
     except Exception as e:
 
         raise RuntimeError(f"预处理失败: {str(e)}")
+
+    #特征提取
+    extractor = FeatureExtractor(fs)
+
+    X = extractor.extract(X)
+
+    print("特征提取完成:", X.shape)
 
     # 5划分训练测试
     X_train, X_test, y_train, y_test = train_test_split(
