@@ -33,8 +33,14 @@ st.title("🧠 运动想象BCI康复训练与教学实训平台")
 
 st.sidebar.title("🎛️ 控制面板")
 
-# 动态获取算法（
+# 动态获取算法
+AlgorithmRegistry.discover()
 algorithms = AlgorithmRegistry.list_algorithms()
+print("扫描到的算法：", algorithms)
+
+if not algorithms:
+    st.sidebar.error("未扫描到可用算法。请检查插件依赖安装情况与导入报错日志。")
+    st.stop()
 
 selected_algo = st.sidebar.selectbox(
     "选择算法",
@@ -118,14 +124,14 @@ with tab2:
         freqs = np.fft.rfftfreq(len(signal), 1/250)
 
         fig2 = px.line(x=freqs, y=fft_vals, title="FFT")
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
     st.subheader("PSD特征")
 
     psd = fft_vals**2
 
     fig3 = px.line(x=freqs, y=psd, title="PSD")
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width="stretch")
 
 # ==============================
 # 算法验证（核心！！）
@@ -185,7 +191,7 @@ with tab3:
             st.dataframe(df)
 
             fig = px.bar(df, x="Algorithm", y="Accuracy", title="算法对比")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
 # ==============================
 # 康复训练（闭环！！）
@@ -220,14 +226,14 @@ with tab4:
     # 绘图
     fig, ax = plt.subplots()
 
-    ax.scatter(st.session_state.ball, 0, s=300, label="当前")
-    ax.scatter(target, 0, s=300, marker="x", label="目标")
+    ax.scatter(st.session_state.ball, 0, s=300, label="Current")
+    ax.scatter(target, 0, s=300, marker="x", label="Target")
 
     ax.set_xlim(-10, 10)
     ax.set_ylim(-1, 1)
 
     ax.legend()
-    ax.set_title("BCI康复训练")
+    ax.set_title("BCI Rehab Training")
 
     st.pyplot(fig)
 

@@ -1,5 +1,8 @@
 # src/pipeline/run_pipeline.py
 
+import os
+from pathlib import Path
+
 from src import BCIDataSystem
 from src import AlgorithmRegistry
 
@@ -9,15 +12,21 @@ from sklearn.metrics import accuracy_score, f1_score
 from src.preprocessing import Preprocessing
 from src.feature_extraction import FeatureExtractor
 
-def run_pipeline(algo_name="svm"):
+def run_pipeline(algo_name="svm", data_dir=None):
     """
     最小BCI实验pipeline
     """
 
     print("========== BCI Pipeline Start ==========")
 
-    # 1 初始化数据系统
-    bci = BCIDataSystem(data_dir="D:\\pycharm\\code\\BCI-Software-Platform\\third_party_device_data")
+    # 1 初始化数据系统（优先使用函数参数，其次环境变量，最后项目内默认目录）
+    project_root = Path(__file__).resolve().parents[2]
+    configured_data_dir = data_dir or os.getenv("BCI_DATA_DIR") or "third_party_device_data"
+    resolved_data_dir = Path(configured_data_dir)
+    if not resolved_data_dir.is_absolute():
+        resolved_data_dir = project_root / resolved_data_dir
+
+    bci = BCIDataSystem(data_dir=str(resolved_data_dir))
 
     # 2 查询数据
     data_ids = bci.query_data()
